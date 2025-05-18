@@ -2,7 +2,7 @@ const svLink = "https://gchsedjronrenjwafuyb.supabase.co";
 const ap = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjaHNlZGpyb25yZW5qd2FmdXliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NDgwNDQsImV4cCI6MjA2MzEyNDA0NH0.O76q9gHvB6frsGQNdDoNrfHOOox9WDh5kxa4AORNwKw";
 const reqTest = "https://gchsedjronrenjwafuyb.supabase.co/functions/v1/hyper-handler";
 
-//const sb = supabase.createClient(svLink, ap);
+const sb = supabase.createClient(svLink, ap);
 
 async function loadTT() {
     const { data, error } = await sb
@@ -14,6 +14,8 @@ async function loadTT() {
     } else {
         console.log(data);
     }
+
+    return data;
 }
 
 async function getKQ() {
@@ -40,9 +42,25 @@ async function getKQ() {
     console.log("Kết quả từ function:", data);
 }
 
-//getKQ();
+function getRotationAngle(el) {
+    const style = window.getComputedStyle(el);
+    const transform = style.getPropertyValue("transform");
 
-//loadTT();
+    if (transform === "none") return 0;
+
+    // Matrix: matrix(a, b, c, d, tx, ty)
+    const values = transform.match(/matrix\(([^)]+)\)/);
+    if (!values) return 0;
+
+    const parts = values[1].split(",").map(parseFloat);
+    const [a, b] = parts;
+
+    // angle in radians → degrees
+    const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+    return (angle + 360) % 360; // normalize to 0–359
+}
+
+//getKQ();
 
 function addItem(arr) {
     const aglPerItem = 360 / arr.length;
@@ -53,14 +71,14 @@ function addItem(arr) {
     // wheel.innerHTML = "<div class='spinBtn' onclick='spinClick();'>Spin</div>";
 
     const colors = [
-        'rgb(255, 82, 82)',   // đỏ tươi
-        'rgb(255, 193, 7)',   // vàng sáng
-        'rgb(76, 175, 80)',   // xanh lá sáng
-        'rgb(33, 150, 243)',  // xanh dương sáng
-        'rgb(156, 39, 176)',  // tím
-        'rgb(255, 87, 34)',   // cam
-        'rgb(0, 188, 212)',   // cyan
-        'rgb(205, 220, 57)'   // vàng chanh
+        'rgb(255, 82, 82)',
+        'rgb(255, 193, 7)',
+        'rgb(76, 175, 80)',
+        'rgb(33, 150, 243)',
+        'rgb(156, 39, 176)',
+        'rgb(255, 87, 34)',
+        'rgb(0, 188, 212)',
+        'rgb(205, 220, 57)'
     ];
 
     const clen = colors.length;
@@ -89,7 +107,8 @@ function addItem(arr) {
         const item = document.createElement('div');
         item.className = "item";
         item.style.setProperty('--angle', aglPerItem + 'deg');
-        item.innerHTML = '<p>' + e + '</p>';
+        item.innerHTML = '<p>' + e.trung_thuong_txt + '</p>';
+        item.TTId = e.id;
         item.style.backgroundColor = colors[i % clen];
 
         wheel.append(item);
@@ -103,8 +122,6 @@ function addItem(arr) {
         document.querySelector('.wheel .item:nth-child(' + (i + 1) + ')').style.transform = "rotate(" + (i * aglPerItem) + "deg)";
     });
 }
-
-addItem(['cc', 'cl', '1', '2', 'gygyrdrdrdrdrdrdrdg3']); 
 
 let agl = 0;
 let agls = 20;
@@ -121,11 +138,48 @@ function spinClick() {
     console.log('spin', spin);
 }
 
-function showRe() {
-    
+function modAgl(a) {
+    if (a < 0) {
+        return a % 360 + 360;
+    } else {
+        return a % 360;
+    }
 }
 
+function getRe() {
+    const wheel = document.getElementsByClassName('wheel')[0];
+    const aglPerItem = 180 / wheel.childElementCount;
+    const wagl = getRotationAngle(wheel);
+
+    Array.from(wheel.children).forEach(e => {
+        const iagl = modAgl(getRotationAngle(e) - 90 + wagl);
+
+        console.log(iagl);
+
+        if (iagl <= aglPerItem / 2 || iagl >= 360 + aglPerItem / 2) {
+            return e;
+        }
+    });
+}
+
+function showRe(e) {
+    const mescon = document.getElementsByClassName('mess-con')[0];
+    const mes = document.querySelector('.mesBox p');
+
+    mescon.style.display = 'flex';
+    mesb
+}
+
+let st;
+
 function rotate(t) {
+    // console.log(t);
+    if (st === undefined) {
+        st = t;
+        requestAnimationFrame(rotate);
+        return;
+    }
+
     const wheel = document.querySelector('.wheel');
     const deltaT = (t - oldt) / 1000;
 
@@ -133,12 +187,13 @@ function rotate(t) {
 
     if (spinv <= 0) {
         spinv = 0;
+        getRe();
     } else {
         if (spin) spinv += spina * deltaT;
     }
 
     agl += (spin ? spinv : agls) * deltaT;
-    scl = 1 - (1 - Math.min(t / (sclt * 1000), 1)) ** 2;
+    scl = 1 - (1 - Math.min((t - st) / (sclt * 1000), 1)) ** 2;
 
     oldt = t;
 
@@ -147,4 +202,10 @@ function rotate(t) {
     requestAnimationFrame(rotate);
 }
 
-requestAnimationFrame(rotate);
+async function main() {
+    addItem(await loadTT());
+
+    requestAnimationFrame(rotate);
+}
+
+main();
