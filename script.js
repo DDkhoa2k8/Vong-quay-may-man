@@ -47,10 +47,10 @@ async function getKQ() {
 function addItem(arr) {
     const aglPerItem = 360 / arr.length;
     const wheel = document.querySelector('.wheel');
-    const wheelRect = wheel.getBoundingClientRect();
-    const font = wheelRect.width;
+    const wheelR = wheel.getBoundingClientRect().width * .85 / 2 - 50;
 
     wheel.innerHTML = "";
+    // wheel.innerHTML = "<div class='spinBtn' onclick='spinClick();'>Spin</div>";
 
     const colors = [
         'rgb(255, 82, 82)',   // đỏ tươi
@@ -64,17 +64,87 @@ function addItem(arr) {
     ];
 
     const clen = colors.length;
+
+    if (arr.length == 1) {
+        const item = document.createElement('div');
+        item.className = "item";
+        item.style.mask = 'none';
+        item.style.webkitMask = 'none';
+        item.innerHTML = '<p>' + arr[0] + '</p>';
+        item.style.backgroundColor = colors[0];
+
+        wheel.append(item);
+
+        const apItem = document.querySelector('.wheel .item:nth-child(2) p');
+
+        const apItemRect = apItem.getBoundingClientRect();
+
+        //apItem.style.fontSize = (apItemRect.height * wheelR / apItemRect.width) + "px";
+        apItem.style.transform = "scale(" + wheelR / apItemRect.width + ")";
+
+        return;
+    }
     
     arr.forEach((e, i) => {
         const item = document.createElement('div');
         item.className = "item";
         item.style.setProperty('--angle', aglPerItem + 'deg');
-        item.style.transform = "rotate(" + (i * aglPerItem) + "deg)";
-        item.innerHTML = e;
+        item.innerHTML = '<p>' + e + '</p>';
         item.style.backgroundColor = colors[i % clen];
 
         wheel.append(item);
+
+        const apItem = document.querySelector('.wheel .item:nth-child(' + (i + 1) + ') p');
+        console.log(i, apItem);
+        const apItemRect = apItem.getBoundingClientRect();
+
+        //apItem.style.fontSize = (apItemRect.height * wheelR / apItemRect.width) + "px";
+
+        document.querySelector('.wheel .item:nth-child(' + (i + 1) + ')').style.transform = "rotate(" + (i * aglPerItem) + "deg)";
     });
 }
 
 addItem(['cc', 'cl', '1', '2', 'gygyrdrdrdrdrdrdrdg3']); 
+
+let agl = 0;
+let agls = 20;
+let oldt = 0;
+let scl = 0;
+let sclt = 1;
+let spina = -200;
+let spinv;
+let spin = false;
+
+function spinClick() {
+    spin = true;
+    spinv = 1000 + agls;
+    console.log('spin', spin);
+}
+
+function showRe() {
+    
+}
+
+function rotate(t) {
+    const wheel = document.querySelector('.wheel');
+    const deltaT = (t - oldt) / 1000;
+
+    // if (spin) spinv += spina * deltaT;
+
+    if (spinv <= 0) {
+        spinv = 0;
+    } else {
+        if (spin) spinv += spina * deltaT;
+    }
+
+    agl += (spin ? spinv : agls) * deltaT;
+    scl = 1 - (1 - Math.min(t / (sclt * 1000), 1)) ** 2;
+
+    oldt = t;
+
+    wheel.style.transform = 'rotate(' + agl + 'deg) scale(' + scl + ')';
+
+    requestAnimationFrame(rotate);
+}
+
+requestAnimationFrame(rotate);

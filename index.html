@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Vòng quay may mắn!</title>
 </head>
 <body>
     <div class="con">
         <h1>Vòng quay may mắn!</h1>
-        <div class="wheel">
-            <div class="item"><p>item1</p></div>
-            <div class="item"><p>item2</p></div>
-            <div class="item"><p>item3</p></div>
+        <div class="wheelCon">
+            <div class="spinBtn" onclick="spinClick();">Spin!</div>
+            <div class="pointer"></div>
+            <div class="wheel">
+                <div class="item"><p>item1</p></div>
+                <div class="item"><p>item2</p></div>
+                <div class="item"><p>item3</p></div>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>

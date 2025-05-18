@@ -1,6 +1,7 @@
 html, body {
     height: 100%;
     margin: 0%;
+    overflow: hidden;
 }
 
 * {
@@ -18,13 +19,27 @@ html, body {
     flex-direction: column;
 }
 
+.wheelCon {
+    border-radius: 100%;
+    width: 90%;
+    aspect-ratio: 1 / 1;
+    max-width: 500px;
+    background-color: transparent;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .wheel {
     border-radius: 100%;
-    height: 90%;
+    width: 100%;
     aspect-ratio: 1 / 1;
-    max-height: 500px;
     background-color: white;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .item {
@@ -38,19 +53,49 @@ html, body {
     display: flex;
     align-items: center;
     padding-left: 10px;
-    font-size: large;
     mask: conic-gradient(
-    transparent calc(270deg - var(--angle2)),
-    white     calc(270deg - var(--angle2)) 
-                calc(270deg + var(--angle2)),
-    transparent calc(270deg + var(--angle2)) 360deg
+        transparent calc(270deg - var(--angle2)),
+        white     calc(270deg - var(--angle2))
+                    calc(270deg + var(--angle2)),
+        transparent calc(270deg + var(--angle2)) 360deg
     );
     -webkit-mask: conic-gradient(
-    transparent calc(270deg - var(--angle2)),
-    white     calc(270deg - var(--angle2)) 
-                calc(270deg + var(--angle2)),
-    transparent calc(270deg + var(--angle2)) 360deg
+        transparent calc(270deg - var(--angle2)),
+        white     calc(270deg - var(--angle2)) 
+                    calc(270deg + var(--angle2)),
+        transparent calc(270deg + var(--angle2)) 360deg
     );
     position: absolute;
     box-sizing: border-box;
+}
+
+.item p {
+    font-size: large;
+    height: min-content;
+    margin: 0%;
+}
+
+.spinBtn {
+    border-radius: 100%;
+    width: 15%;
+    aspect-ratio: 1 / 1;
+    background-color: white;
+    position: absolute;
+    z-index: 10;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.pointer {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 40px solid red;
+    position: absolute;
+    top: -20px;
+    z-index: 2;
 }
