@@ -253,7 +253,7 @@ async function main() {
 
     tar = rep.tt;
 
-    code = rep.maPT;
+    code = rep.maTT;
 
     requestAnimationFrame(rotate);
 }
