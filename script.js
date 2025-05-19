@@ -273,6 +273,8 @@ async function main() {
 
     showPro();
 
+    await sleep(300);
+
     hideLoading();
 
     tar = rep.tt;
