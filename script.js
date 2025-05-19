@@ -188,13 +188,15 @@ function findEl(text) {
 }
 
 function setAglAc(tar, agl, agls, loop, sst) {
-    const tarWheelAgl = 360 - (getRotationAngle(tar) - 90) + 360 * loop;
+    const aglPerItem = 360 / wheel.childElementCount;
+    const tarWheelAgl = 360 - (getRotationAngle(tar) - 90) + 360 * loop + (Math.random() - .5) * aglPerItem;
     const a =  -agls / (2 * (tarWheelAgl - agl) / agls);
 
     return (t) => {
         const localt = (t - sst) / 1000;
 
         if (a * localt + agls <= 0)  {
+            showRe(getRe())
             return tarWheelAgl;
         }
 
