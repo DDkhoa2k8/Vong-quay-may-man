@@ -256,7 +256,7 @@ let pro = 1;
 const proc = 2;
 
 function showPro() {
-    document.querySelector(`.loading .bar .pro:nth-child(${pro})`).style.width = (100 / proc * pro) + "%";
+    document.querySelector(`.loading .bar .pro:nth-child(1)`).style.width = (100 / proc * pro) + "%";
     pro++;
 }
 
