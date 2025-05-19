@@ -277,6 +277,8 @@ async function main() {
 
     hideLoading();
 
+    document.querySelector(`.loading .bar .pro:nth-child(1)`).style.display = 'none';
+
     tar = rep.tt;
 
     code = rep.maTT;
