@@ -246,10 +246,29 @@ function rotate(t) {
     requestAnimationFrame(rotate);
 }
 
+function hideLoading() {
+    const loadDot = document.querySelector('.loading');
+
+    loadDot.classList.add('hide');
+}
+
+let pro = 1;
+
+function showPro() {
+    document.querySelector(`.loading .bar .pro:nth-child(${pro})`).style.width = "50%";
+    pro++;
+}
+
 async function main() {
     addItem(await loadTT());
 
+    showPro();
+
     const rep = await getKQ();
+
+    showPro();
+
+    hideLoading();
 
     tar = rep.tt;
 
