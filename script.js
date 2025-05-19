@@ -131,9 +131,11 @@ let spinv;
 let spin = false;
 
 function spinClick() {
+    if (spin) return;
     spin = true;
     spinv = 1000 + agls;
-    spina = setAglAc(document.querySelector('.wheel .item'), agl, spinv, 10);
+    // spina = setAglAc(document.querySelectorAll('.wheel .item')[1], agl, spinv, 10);
+    spinAni = setAglAc(document.querySelectorAll('.wheel .item')[1], agl, spinv, 10, RAFT);
     console.log('spin', spin);
 }
 
@@ -153,7 +155,7 @@ function getRe() {
 
     Array.from(wheel.children).forEach(e => {
         const iagl = modAgl(getRotationAngle(e) - 90 + wagl);
-        console.log(iagl);
+        //console.log(iagl);
         if (iagl <= aglPerItem / 2 || iagl >= 360 - aglPerItem / 2) {
             r =  e;
         }
@@ -185,18 +187,26 @@ function findEl(text) {
     return ri;
 }
 
-function setAglAc(tar, agl, agls, loop) {
+function setAglAc(tar, agl, agls, loop, sst) {
     const tarWheelAgl = 360 - (getRotationAngle(tar) - 90) + 360 * loop;
+    const a =  -agls / (2 * (tarWheelAgl - agl) / agls);
 
-    // return () => {
+    return (t) => {
+        const localt = (t - sst) / 1000;
 
-    // }
+        if (a * localt + agls <= 0)  {
+            return tarWheelAgl;
+        }
 
-    return -agls / (2 * (tarWheelAgl - agl) / agls);
+        return a * localt ** 2 / 2 + agls * localt + agl;
+    }
 }
 
 let st;
+let RAFT;
 let code;
+let spinAni;
+const wheel = document.querySelector('.wheel');
 
 function rotate(t) {
     // console.log(t);
@@ -206,19 +216,13 @@ function rotate(t) {
         return;
     }
 
-    const wheel = document.querySelector('.wheel');
+    RAFT = t;
+
     const deltaT = (t - oldt) / 1000;
 
-    // if (spin) spinv += spina * deltaT;
-
-    if (spinv <= 0) {
-        spinv = 0;
-        showRe(getRe());
-    } else {
-        if (spin) spinv += spina * deltaT;
-    }
-
-    agl += (spin ? spinv : agls) * deltaT;
+    if (spin) agl = spinAni(t);
+    else agl += agls * deltaT;
+    
     scl = 1 - (1 - Math.min((t - st) / (sclt * 1000), 1)) ** 2;
 
     oldt = t;
