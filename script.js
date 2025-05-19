@@ -37,6 +37,7 @@ async function getKQ() {
 
     const data = await response.json();
     console.log("Kết quả từ function:", data);
+    return data;
 }
 
 function getRotationAngle(el) {
@@ -132,6 +133,7 @@ let spin = false;
 function spinClick() {
     spin = true;
     spinv = 1000 + agls;
+    spina = setAglAc(document.querySelector('.wheel .item'), agl, spinv, 10);
     console.log('spin', spin);
 }
 
@@ -145,13 +147,13 @@ function modAgl(a) {
 
 function getRe() {
     const wheel = document.getElementsByClassName('wheel')[0];
-    const aglPerItem = 180 / wheel.childElementCount;
+    const aglPerItem = 360 / wheel.childElementCount;
     const wagl = getRotationAngle(wheel);
     let r;
 
     Array.from(wheel.children).forEach(e => {
         const iagl = modAgl(getRotationAngle(e) - 90 + wagl);
-
+        console.log(iagl);
         if (iagl <= aglPerItem / 2 || iagl >= 360 - aglPerItem / 2) {
             r =  e;
         }
@@ -168,6 +170,29 @@ function showRe(e) {
     mes.innerHTML = e.children[0].innerHTML;
 
     document.querySelector('.mesBox #code').innerHTML = "Mã trúng thưởng:" + code;
+}
+
+function findEl(text) {
+    let el = document.querySelectorAll('.wheel .item p');
+    let ri;
+
+    el.forEach((e, i) => {
+        if (e.innerHTML === text) {
+            ri = i;
+        }
+    });
+
+    return ri;
+}
+
+function setAglAc(tar, agl, agls, loop) {
+    const tarWheelAgl = 360 - (getRotationAngle(tar) - 90) + 360 * loop;
+
+    // return () => {
+
+    // }
+
+    return -agls / (2 * (tarWheelAgl - agl) / agls);
 }
 
 let st;
