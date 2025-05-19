@@ -115,12 +115,26 @@ html, body {
     /* position: absolute; */
 }
 
+.mesBox h1 {
+    text-align: center;
+}
+
 .mess-con {
     height: 100%;
     width: 100%;
     z-index: 10;
     backdrop-filter: blur(10px);
     display: flex;
+    position: absolute;
+    justify-content: center;
+    display: none;
+    align-items: center;
+}
+
+.loading {
+    height: 100%;
+    width: 100%;
+    z-index: 10;
     position: absolute;
     justify-content: center;
     display: none;
