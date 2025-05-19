@@ -269,7 +269,7 @@ async function main() {
 
     showPro();
 
-    //const rep = await getKQ();
+    const rep = await getKQ();
 
     showPro();
 
@@ -279,12 +279,12 @@ async function main() {
 
     document.querySelector(`.loading`).style.display = 'none';
 
-    //tar = rep.tt;
+    tar = rep.tt;
 
-    //code = rep.maTT;
+    code = rep.maTT;
 
-    tar = "TEST";
-    code = 1;
+    // tar = "TEST";
+    // code = 1;
 
     requestAnimationFrame(rotate);
 }
