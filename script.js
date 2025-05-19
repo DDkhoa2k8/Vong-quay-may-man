@@ -1,6 +1,5 @@
 const svLink = "https://gchsedjronrenjwafuyb.supabase.co";
 const ap = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjaHNlZGpyb25yZW5qd2FmdXliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NDgwNDQsImV4cCI6MjA2MzEyNDA0NH0.O76q9gHvB6frsGQNdDoNrfHOOox9WDh5kxa4AORNwKw";
-const reqTest = "https://gchsedjronrenjwafuyb.supabase.co/functions/v1/hyper-handler";
 
 const sb = supabase.createClient(svLink, ap);
 
@@ -23,12 +22,10 @@ async function getKQ() {
         name: 'khoa', 
     };
 
-    const response = await fetch(reqTest, {
+    const response = await fetch('https://gchsedjronrenjwafuyb.supabase.co/functions/v1/get-result', {
         method: "POST",
         headers: {
-        "Content-Type": "application/json",
-        // Nếu function yêu cầu auth, thêm header Authorization:
-        // "Authorization": "Bearer YOUR_SUPABASE_ANON_OR_ACCESS_TOKEN"
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(bodyData)
     });
@@ -150,27 +147,31 @@ function getRe() {
     const wheel = document.getElementsByClassName('wheel')[0];
     const aglPerItem = 180 / wheel.childElementCount;
     const wagl = getRotationAngle(wheel);
+    let r;
 
     Array.from(wheel.children).forEach(e => {
         const iagl = modAgl(getRotationAngle(e) - 90 + wagl);
 
-        console.log(iagl);
-
-        if (iagl <= aglPerItem / 2 || iagl >= 360 + aglPerItem / 2) {
-            return e;
+        if (iagl <= aglPerItem / 2 || iagl >= 360 - aglPerItem / 2) {
+            r =  e;
         }
     });
+
+    return r;
 }
 
 function showRe(e) {
     const mescon = document.getElementsByClassName('mess-con')[0];
-    const mes = document.querySelector('.mesBox p');
+    const mes = document.querySelector('.mesBox #output');
 
     mescon.style.display = 'flex';
-    mesb
+    mes.innerHTML = e.children[0].innerHTML;
+
+    document.querySelector('.mesBox #code').innerHTML = "Mã trúng thưởng:" + code;
 }
 
 let st;
+let code;
 
 function rotate(t) {
     // console.log(t);
@@ -187,7 +188,7 @@ function rotate(t) {
 
     if (spinv <= 0) {
         spinv = 0;
-        getRe();
+        showRe(getRe());
     } else {
         if (spin) spinv += spina * deltaT;
     }
@@ -204,6 +205,9 @@ function rotate(t) {
 
 async function main() {
     addItem(await loadTT());
+
+    code = 727;
+    tar = '';
 
     requestAnimationFrame(rotate);
 }
