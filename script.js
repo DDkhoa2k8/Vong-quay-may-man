@@ -121,21 +121,24 @@ function addItem(arr) {
     });
 }
 
-let agl = 0;
-let agls = 20;
-let oldt = 0;
-let scl = 0;
-let sclt = 1;
-let spina = -200;
-let spinv;
-let spin = false;
+function searchByContent(txt) {
+    let r;
+
+    document.querySelectorAll('.wheel .item').forEach(e => {
+        if (e.innerHTML === txt) {
+            r = e.innerHTML;
+        }
+    });
+
+    return r;
+}
 
 function spinClick() {
     if (spin) return;
     spin = true;
     spinv = 1000 + agls;
     // spina = setAglAc(document.querySelectorAll('.wheel .item')[1], agl, spinv, 10);
-    spinAni = setAglAc(document.querySelectorAll('.wheel .item')[1], agl, spinv, 10, RAFT);
+    spinAni = setAglAc(searchByContent(tar), agl, spinv, 10, RAFT);
     console.log('spin', spin);
 }
 
@@ -206,8 +209,17 @@ function setAglAc(tar, agl, agls, loop, sst) {
 
 let st;
 let RAFT;
-let code;
 let spinAni;
+let agl = 0;
+let agls = 20;
+let oldt = 0;
+let scl = 0;
+let sclt = 1;
+let spina = -200;
+let spinv;
+let spin = false;
+let tar;
+let code;
 const wheel = document.querySelector('.wheel');
 
 function rotate(t) {
@@ -237,8 +249,11 @@ function rotate(t) {
 async function main() {
     addItem(await loadTT());
 
-    code = 727;
-    tar = '';
+    const rep = await getKQ();
+
+    tar = rep.tt;
+
+    code = rep.maPT;
 
     requestAnimationFrame(rotate);
 }
