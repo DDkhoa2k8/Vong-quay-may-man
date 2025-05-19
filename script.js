@@ -125,8 +125,8 @@ function searchByContent(txt) {
     let r;
 
     document.querySelectorAll('.wheel .item').forEach(e => {
-        if (e.innerHTML === txt) {
-            r = e.innerHTML;
+        if (e.children[0].innerHTML === txt) {
+            r = e;
         }
     });
 
