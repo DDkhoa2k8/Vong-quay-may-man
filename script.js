@@ -253,10 +253,15 @@ function hideLoading() {
 }
 
 let pro = 1;
+const proc = 2;
 
 function showPro() {
-    document.querySelector(`.loading .bar .pro:nth-child(${pro})`).style.width = "50%";
+    document.querySelector(`.loading .bar .pro:nth-child(${pro})`).style.width = (100 / proc * pro) + "%";
     pro++;
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function main() {
@@ -267,6 +272,8 @@ async function main() {
     const rep = await getKQ();
 
     showPro();
+
+    await sleep(300);
 
     hideLoading();
 
