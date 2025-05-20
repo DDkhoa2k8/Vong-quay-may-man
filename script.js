@@ -138,7 +138,7 @@ function spinClick() {
     spin = true;
     spinv = 1000 + agls;
     // spina = setAglAc(document.querySelectorAll('.wheel .item')[1], agl, spinv, 10);
-    spinAni = setAglAc(searchByContent(tar), agl, spinv, 1, RAFT);
+    spinAni = setAglAc(searchByContent(tar), agl, spinv, 10, RAFT);
     console.log('spin', spin);
 }
 
