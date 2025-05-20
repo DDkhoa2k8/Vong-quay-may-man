@@ -138,7 +138,7 @@ function spinClick() {
     spin = true;
     spinv = 1000 + agls;
     // spina = setAglAc(document.querySelectorAll('.wheel .item')[1], agl, spinv, 10);
-    spinAni = setAglAc(searchByContent(tar), agl, spinv, 10, RAFT);
+    spinAni = setAglAc(searchByContent(tar), agl, spinv, 1, RAFT);
     console.log('spin', spin);
 }
 
@@ -192,7 +192,7 @@ function findEl(text) {
 
 function setAglAc(tar, agl, agls, loop, sst) {
     const aglPerItem = 360 / wheel.childElementCount;
-    const tarWheelAgl = 360 - modAgl(getRotationAngle(tar) - 90) + 360 * loop + (Math.random() - .5) * aglPerItem;
+    const tarWheelAgl = 720 - modAgl(agl) - modAgl(getRotationAngle(tar) - 90) + 360 * loop + (Math.random() - .5) * aglPerItem;
     const a = -agls / (2 * tarWheelAgl / agls);
 
     return (t) => {
