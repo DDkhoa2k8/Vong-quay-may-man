@@ -283,8 +283,8 @@ async function main() {
 
     code = rep.maTT;
 
-    // tar = "TEST";
-    // code = 1;
+    tar = "TEST";
+    code = 1;
 
     requestAnimationFrame(rotate);
 }

@@ -17,6 +17,7 @@ html, body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    gap: 10px;
 }
 
 .wheelCon {
@@ -115,7 +116,7 @@ html, body {
     /* position: absolute; */
 }
 
-.mesBox h1 {
+.con h1 {
     text-align: center;
 }
 
