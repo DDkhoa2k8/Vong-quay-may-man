@@ -158,7 +158,6 @@ function getRe() {
 
     Array.from(wheel.children).forEach(e => {
         const iagl = modAgl(getRotationAngle(e) - 90 + wagl);
-        //console.log(iagl);
         if (iagl <= aglPerItem / 2 || iagl >= 360 - aglPerItem / 2) {
             r =  e;
         }
@@ -192,15 +191,15 @@ function findEl(text) {
 
 function setAglAc(tar, agl, agls, loop, sst) {
     const aglPerItem = 360 / wheel.childElementCount;
-    const tarWheelAgl = 720 - modAgl(agl) - modAgl(getRotationAngle(tar) - 90) + 360 * loop + (Math.random() - .5) * aglPerItem;
+    const tarWheelAgl = 360 - modAgl(agl) + 360 - modAgl(getRotationAngle(tar) - 90) + 360 * loop + (Math.random() - .5) * aglPerItem;
     const a = -agls / (2 * tarWheelAgl / agls);
 
     return (t) => {
         const localt = (t - sst) / 1000;
 
         if (a * localt + agls <= 0)  {
-            showRe(getRe())
-            return tarWheelAgl;
+            showRe(getRe());
+            return tarWheelAgl + agl;
         }
 
         return a * localt ** 2 / 2 + agls * localt + agl;
@@ -265,11 +264,21 @@ function sleep(ms) {
 }
 
 async function main() {
+    let dev = false;
+
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey) {
+            dev = true;
+        }
+    })
+
     addItem(await loadTT());
 
     showPro();
 
-    const rep = await getKQ();
+    let rep;
+
+    if (!dev) rep = await getKQ();
 
     showPro();
 
@@ -279,12 +288,9 @@ async function main() {
 
     document.querySelector(`.loading`).style.display = 'none';
 
-    tar = rep.tt;
+    if (!dev) tar = rep.tt, code = rep.maTT;
 
-    code = rep.maTT;
-
-    // tar = "TEST";
-    // code = 1;
+    if (dev) tar = "TEST", code = 1;
 
     requestAnimationFrame(rotate);
 }
