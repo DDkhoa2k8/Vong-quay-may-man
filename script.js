@@ -40,6 +40,10 @@ async function getKQ() {
     return data;
 }
 
+function setCookie() {
+    document.cookie = "spin=true; path=/; expires=Fri, 31 Dec 2025 23:59:59 GMT";
+}
+
 function getRotationAngle(el) {
     const style = window.getComputedStyle(el);
     const transform = style.getPropertyValue("transform");
@@ -139,6 +143,7 @@ function spinClick() {
     spinv = 1000 + agls;
     // spina = setAglAc(document.querySelectorAll('.wheel .item')[1], agl, spinv, 10);
     spinAni = setAglAc(searchByContent(tar), agl, spinv, 10, RAFT);
+    setCookie();
     console.log('spin', spin);
 }
 
@@ -264,11 +269,19 @@ function sleep(ms) {
 }
 
 async function main() {
+    const c = `; ${document.cookie}`;
+    const parts = c.split(`; spin=`);
+    if (parts.length === 2 && parts.pop().split(';').shift() === 'true') {
+        alert('Bạn chỉ được quay một lần.');
+        return;
+    };
+
     let dev = false;
 
     document.addEventListener('keydown', e => {
         if (e.ctrlKey) {
             dev = true;
+            console.log('dev');
         }
     })
 
@@ -276,9 +289,12 @@ async function main() {
 
     showPro();
 
+    await sleep(300);
+
     let rep;
 
-    if (!dev) rep = await getKQ();
+    if (!dev) rep = await getKQ(), tar = rep.tt, code = rep.maTT;
+    else tar = "TEST", code = 1;
 
     showPro();
 
@@ -287,10 +303,6 @@ async function main() {
     hideLoading();
 
     document.querySelector(`.loading`).style.display = 'none';
-
-    if (!dev) tar = rep.tt, code = rep.maTT;
-
-    if (dev) tar = "TEST", code = 1;
 
     requestAnimationFrame(rotate);
 }
