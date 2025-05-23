@@ -75,6 +75,8 @@ html, body {
 .item p {
     font-size: large;
     height: min-content;
+    max-width: calc(42.5%);
+    white-space: nowrap;
     margin: 0%;
 }
 

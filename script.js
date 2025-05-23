@@ -17,9 +17,9 @@ async function loadTT() {
     return data;
 }
 
-async function getKQ() {
+async function getKQ(spincode) {
     const bodyData = {
-        name: 'khoa', 
+        spincode: spincode, 
     };
 
     const response = await fetch('https://gchsedjronrenjwafuyb.supabase.co/functions/v1/get-result', {
@@ -257,7 +257,7 @@ function hideLoading() {
 }
 
 let pro = 1;
-const proc = 2;
+const proc = 3;
 
 function showPro() {
     document.querySelector(`.loading .bar .pro:nth-child(1)`).style.width = (100 / proc * pro) + "%";
@@ -268,22 +268,55 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function main() {
-    const c = `; ${document.cookie}`;
-    const parts = c.split(`; spin=`);
-    if (parts.length === 2 && parts.pop().split(';').shift() === 'true') {
-        alert('Bạn chỉ được quay một lần.');
-        return;
+async function check_spin_code(spincode) {
+    const bodyData = {
+        code: spincode, 
     };
 
-    let dev = false;
+    const response = await fetch('https://gchsedjronrenjwafuyb.supabase.co/functions/v1/check-spin-code', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData)
+    });
 
-    document.addEventListener('keydown', e => {
-        if (e.ctrlKey) {
-            dev = true;
-            console.log('dev');
-        }
-    })
+    if (!response.ok) {
+        console.error("Lỗi khi gọi function:", response.statusText);
+        return;
+    }
+
+    const data = await response.json();
+    console.log("Kết quả từ function:", data);
+    return data;
+}
+
+function showErr() {
+    
+}
+
+async function main() {
+    const spinCode = prompt("Nhập mã để quay:");
+
+    let checksc = await check_spin_code(Number(spinCode));
+
+    showPro();
+
+    if (!checksc.isValid) {
+        const mescon = document.getElementsByClassName('mess-con')[0];
+        const mes = document.querySelector('.mesBox');
+
+        mescon.style.display = 'flex';
+        mes.innerHTML = '<h1>Mã không hợp lệ hoặc đã được sử dụng.</h1>';
+        return;
+    }
+
+    // const c = `; ${document.cookie}`;
+    // const parts = c.split(`; spin=`);
+    // if (parts.length === 2 && parts.pop().split(';').shift() === 'true') {
+    //     alert('Bạn chỉ được quay một lần.');
+    //     return;
+    // };
 
     addItem(await loadTT());
 
@@ -291,10 +324,9 @@ async function main() {
 
     await sleep(300);
 
-    let rep;
-
-    if (!dev) rep = await getKQ(), tar = rep.tt, code = rep.maTT;
-    else tar = "TEST", code = 1;
+    const rep = await getKQ(Number(spinCode));
+    tar = rep.tt;
+    code = rep.maTT;
 
     showPro();
 
